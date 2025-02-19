@@ -1,9 +1,32 @@
-import { Router } from 'express';
+import path from 'node:path'
 
-export const router = Router();
+import { Router } from 'express';
+import multer from 'multer';
+
 import { listCategories } from './app/useCases/categories/listCategories';
 import { createCategory } from './app/useCases/categories/createCategory';
 import { listProducts } from './app/useCases/products/listProducts';
+import { createProduct } from './app/useCases/products/createProduct';
+import { listProductsByCategory } from './app/useCases/categories/listProductsByCategory';
+import { listOrders } from './app/useCases/orders/listOrders';
+import { createOrder } from './app/useCases/orders/createOrder';
+import { changeOrderStatus } from './app/useCases/orders/changeOrderStatus';
+import { cancelOrder } from './app/useCases/orders/cancelOrder';
+
+
+export const router = Router();
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, callback){
+      callback(null, path.resolve(__dirname, '../', 'uploads'))
+    },
+    filename(req, file, callback) {
+      callback(null, `${Date.now()}-${file.originalname}`)
+    },
+  },
+ )
+});
 
 // list categories
 router.get('/categories',listCategories);
@@ -12,37 +35,24 @@ router.get('/categories',listCategories);
 router.post('/categories', createCategory);
 
 // List products
-router.get('/products',(request, response)=>{
-  response.send('ok');
-});
+router.get('/products', listProducts);
 
 // create product
-router.post('/products', (request, response)=>{
-  response.send('ok');
-});
+router.post('/products', upload.single('image'), createProduct);
 
 // get products by category
-router.get('/categories/:categoryId/products', (request, response)=>{
-  const id = request.params.categoryId;
-  response.send(id);
-});
+router.get('/categories/:categoryId/products',listProductsByCategory);
 
 // list order
-router.get('/orders', (request, response)=>{
-  response.send('ok');
-});
+router.get('/orders', listOrders);
 
 // create order
-router.post('/orders', (request, response)=>{
-  response.send('ok');
-});
+router.post('/orders', createOrder);
 
 // change order status
-router.patch('/orders/:orderId', (request, response)=>{
-  response.send('ok');
-});
+router.patch('/orders/:orderId', changeOrderStatus);
 
 // Delete/cancel order
-router.delete('/orders/:orderId', (request, response)=>{
-  response.send('ok');
-});
+router.delete('/orders/:orderId',cancelOrder);
+
+
