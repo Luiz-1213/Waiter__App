@@ -1,7 +1,15 @@
-const App = () => {
+import Header from './components/Header';
+import Orders from './components/Orders';
+import { GlobalStyles } from './styles/GlobalStyles';
+
+function App() {
   return (
-    <div>App</div>
-  )
+    <>
+      <GlobalStyles/>
+      <Header/>
+      <Orders/>
+    </>
+  );
 }
 
-export default App
+export default App;
