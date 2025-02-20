@@ -35,6 +35,7 @@ export default tseslint.config(
           "namedComponents": "function-declaration",
           "unnamedComponents": "function-expression" 
         }]
+      },
     },
-  },
-)
+  )
+  
